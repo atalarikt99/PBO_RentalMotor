@@ -20,6 +20,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import com.mysql.jdbc.Connection; 
+import java.sql.DriverManager; 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet; 
+import java.sql.SQLException; 
+import java.sql.Statement; 
+import java.util.logging.Level; 
+import java.util.logging.Logger; 
 
 
 /**
@@ -31,8 +39,10 @@ public class formRental extends javax.swing.JFrame {
     /**
      * Creates new form formRental
      */
-    public formRental() {
+    public formRental(String user) {
         initComponents();
+        
+        txtNama.setText(user);
     }
     
 
@@ -47,6 +57,7 @@ public class formRental extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -74,6 +85,11 @@ public class formRental extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRental = new javax.swing.JTable();
         btnEdit = new javax.swing.JButton();
+        tglKembali = new com.toedter.calendar.JDateChooser();
+        tglPinjam = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -85,6 +101,11 @@ public class formRental extends javax.swing.JFrame {
         jLabel1.setText("Rental Motor Bli Nyoman");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(10, 10, 450, 70);
+
+        jLabel8.setFont(new java.awt.Font("Impact", 0, 48)); // NOI18N
+        jLabel8.setText("FORM RENTAL");
+        jPanel1.add(jLabel8);
+        jLabel8.setBounds(920, 20, 270, 60);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 1190, 90);
@@ -99,6 +120,7 @@ public class formRental extends javax.swing.JFrame {
         jLabel2.setBounds(10, 220, 90, 30);
 
         txtNama.setFont(new java.awt.Font("Amphion", 0, 14)); // NOI18N
+        txtNama.setEnabled(false);
         txtNama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNamaActionPerformed(evt);
@@ -204,7 +226,7 @@ public class formRental extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSave);
-        btnSave.setBounds(630, 110, 110, 30);
+        btnSave.setBounds(440, 190, 110, 30);
 
         btnPrint.setFont(new java.awt.Font("News701 BT", 0, 14)); // NOI18N
         btnPrint.setText("Print");
@@ -214,7 +236,7 @@ public class formRental extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnPrint);
-        btnPrint.setBounds(630, 150, 110, 30);
+        btnPrint.setBounds(440, 240, 110, 30);
 
         btnClear.setFont(new java.awt.Font("News701 BT", 0, 14)); // NOI18N
         btnClear.setText("Clear");
@@ -224,7 +246,7 @@ public class formRental extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnClear);
-        btnClear.setBounds(880, 150, 110, 30);
+        btnClear.setBounds(820, 240, 110, 30);
 
         btnDel.setFont(new java.awt.Font("News701 BT", 0, 14)); // NOI18N
         btnDel.setText("Delete");
@@ -234,7 +256,7 @@ public class formRental extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnDel);
-        btnDel.setBounds(1010, 150, 110, 30);
+        btnDel.setBounds(970, 240, 110, 30);
 
         tblRental.setBackground(new java.awt.Color(0, 255, 255));
         tblRental.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -259,7 +281,7 @@ public class formRental extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblRental);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(430, 190, 760, 402);
+        jScrollPane1.setBounds(430, 280, 760, 402);
 
         btnEdit.setFont(new java.awt.Font("News701 BT", 0, 14)); // NOI18N
         btnEdit.setText("Edit");
@@ -269,7 +291,31 @@ public class formRental extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnEdit);
-        btnEdit.setBounds(750, 130, 120, 30);
+        btnEdit.setBounds(580, 220, 120, 30);
+        getContentPane().add(tglKembali);
+        tglKembali.setBounds(1030, 110, 140, 30);
+        getContentPane().add(tglPinjam);
+        tglPinjam.setBounds(760, 110, 140, 30);
+
+        jLabel11.setFont(new java.awt.Font("Futura Md BT", 0, 14)); // NOI18N
+        jLabel11.setText("Tanggal kembali");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(910, 110, 110, 30);
+
+        jLabel12.setFont(new java.awt.Font("Futura Md BT", 0, 14)); // NOI18N
+        jLabel12.setText("Tanggal pinjam");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(650, 110, 100, 30);
+
+        btnSearch.setFont(new java.awt.Font("News701 BT", 0, 14)); // NOI18N
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSearch);
+        btnSearch.setBounds(890, 170, 160, 30);
 
         setBounds(0, 0, 1208, 627);
     }// </editor-fold>//GEN-END:initComponents
@@ -299,6 +345,8 @@ public class formRental extends javax.swing.JFrame {
         txtNopol.setText("");
         Pinjam.setDate(null);
         Balik.setDate(null);
+        tglPinjam.setDate(null);
+        tglKembali.setDate(null);
         txtHarga.setText("");
     }//GEN-LAST:event_btnClearActionPerformed
 
@@ -377,13 +425,13 @@ public class formRental extends javax.swing.JFrame {
         }
         else {
         String SQL = "UPDATE t_peminjam SET "
-                + "nostruk='"+txtNoStruk.getText()+"',"
-                + "nama='"+txtNama.getText()+"',"
-                + "alamat='"+txtAlamat.getText()+"',"
-                + "nopol='"+txtNopol.getText()+"',"
-                + "pinjam='"+pinjam+"',"
-                + "balik='"+balik+"',"
-                + "harga='"+txtHarga.getText()+"'";
+                + "'WHERE nostruk='"+txtNoStruk.getText()+"',"
+                + "WHERE nama='"+txtNama.getText()+"',"
+                + "WHERE alamat='"+txtAlamat.getText()+"',"
+                + "WHERE nopol='"+txtNopol.getText()+"',"
+                + "WHERE pinjam='"+pinjam+"',"
+                + "WHERE balik='"+balik+"',"
+                + "WHERE harga='"+txtHarga.getText()+"'";
         int status = KoneksiDB.execute(SQL);
         if(status == 0){
             JOptionPane.showMessageDialog(this, "Data berhasil di-update", "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -420,6 +468,42 @@ public class formRental extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblRentalMouseClicked
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        PreparedStatement ps;
+        java.sql.Connection connection;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String pinjam1 = dateFormat.format(tglPinjam.getDate());
+        String balik1 = dateFormat.format(tglKembali.getDate());
+
+        try{
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_uts28?zeroDateTimeBehavior=convertToNull","root","");
+        String kolom[] = {"nostruk","nama","alamat","nopol","pinjam","balik","harga"};
+        DefaultTableModel dtm = new DefaultTableModel(null, kolom);
+        ps = connection.prepareStatement("SELECT `nostruk`,`nama`, `alamat`, `nopol`, `pinjam`, `balik`, `harga` FROM `t_peminjam` WHERE pinjam = ? AND balik = ?");
+        ps.setString(1,pinjam1);
+        ps.setString(2,balik1);
+        ResultSet rs = ps.executeQuery();
+        try{
+            while(rs.next()){
+                String nostruk = rs.getString(1);
+                String nama = rs.getString(2);
+                String alamat = rs.getString(3);
+                String nopol = rs.getString(4);
+                String pinjam = rs.getString(5);
+                String balik = rs.getString(6);
+                String harga = rs.getString(7);
+                String data[] = {nostruk,nama,alamat,nopol,pinjam,balik,harga};
+                dtm.addRow(data);
+                
+            }
+        } catch (SQLException ex){
+            Logger.getLogger(formRental.class.getName()).log(Level.SEVERE,null,ex);
+        }        tblRental.setModel(dtm);
+            } catch (SQLException ex){
+                JOptionPane.showMessageDialog(rootPane,"Gagal");
+            }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -451,7 +535,8 @@ public class formRental extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new formRental().setVisible(true);
+                String user = null;
+                new formRental(user).setVisible(true);
             }
         });
     }
@@ -466,14 +551,18 @@ public class formRental extends javax.swing.JFrame {
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -481,6 +570,8 @@ public class formRental extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable tblRental;
+    private com.toedter.calendar.JDateChooser tglKembali;
+    private com.toedter.calendar.JDateChooser tglPinjam;
     private javax.swing.JTextField txtAlamat;
     private javax.swing.JTextField txtHarga;
     private javax.swing.JTextField txtNama;

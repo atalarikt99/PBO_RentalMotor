@@ -146,7 +146,8 @@ public class Masuk extends javax.swing.JFrame {
             ps.setString(2, txtPassword.getText());
             ResultSet result = ps.executeQuery();
             if(result.next()){
-                new formRental().show();
+                String user = txtUsername.getText();
+                new formRental(user).show();
                 this.dispose();
             }
             else{
